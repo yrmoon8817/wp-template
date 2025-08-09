@@ -1,0 +1,15 @@
+$screen-xsm: 320px;
+$screen-sm: 828px;
+$screen-md: 1024px;
+$screen-lg: 1366px;
+$screen-xlg: 1920px;
+
+/* z-index */
+$z-indexes: (
+  skeleton: 5,
+  tooltip: 10,
+  sticky: 20,
+  header: 30,
+  popup: 50,
+  toast: 60,
+);
