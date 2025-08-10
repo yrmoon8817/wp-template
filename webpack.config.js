@@ -1,11 +1,13 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-const cheerio = require('cheerio');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const fs = require('fs-extra');
+const cheerio = require('cheerio');
 const glob = require('glob');
 const crypto = require('crypto');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const SpritesmithPlugin = require('webpack-spritesmith');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 const generateHTML = async() => {
   let projectJson = JSON.parse(await fs.promises.readFile('templates/projectInfo.json', 'utf-8'));
@@ -76,6 +78,23 @@ class RenderHtmlListPlugin {
               callback(null);
               return;
             }
+            metaDataArr.sort((a, b) => {
+              const extractNumbers = (filename) =>
+                filename
+                  .split('_')
+                  .map(part => parseInt(part, 10))
+                  .filter(num => !isNaN(num));
+  
+              const numsA = extractNumbers(a.name);
+              const numsB = extractNumbers(b.name);
+              const len = Math.max(numsA.length, numsB.length);
+              for (let i = 0; i < len; i++) {
+                const valA = numsA[i] ?? 0;
+                const valB = numsB[i] ?? 0;
+                if (valA !== valB) return valA - valB;
+              }
+              return 0;
+            });            
             // metaDataArr 을 templateParameters에 추가
             data.plugin.options.templateParameters = {
               ...data.plugin.options.templateParameters,
@@ -199,9 +218,16 @@ module.exports = async () => {
     entry: entryPath,
     mode: 'none',
     output: {
-      filename: 'project.bundle.js',
+      filename: 'project.bundle.js', // 메인 JS 엔트리
       path: path.resolve(__dirname, 'dist'),
-      clean: true
+      assetModuleFilename: (pathData) => {
+        const relativePath = path.relative(path.resolve(__dirname, 'src'), pathData.filename);
+        if (relativePath.startsWith('fonts/')) {
+          return `asset/fonts/[name][ext]`; // 폰트 파일은 dist/asset/fonts로 이동
+        }
+        return `img/[path][name][ext]`; // 그 외는 img/ 하위로
+      },
+      clean: true // 빌드 전에 dist 정리 > 다 지워버리므로 변경사항만 반영되게 추가설정 필요
     },
     module: {
       rules: [
@@ -213,6 +239,47 @@ module.exports = async () => {
             }
           ]
         },
+        {
+          test: /\.(png|jpe?g|gif|svg|webp)$/i,
+          type: 'asset/resource', // webpack5 표준 이미지 처리 방식
+          generator: {
+            filename: (pathData) => {
+              const relativePath = path.relative(path.resolve(__dirname, 'src/img'), pathData.filename);
+              if (relativePath.startsWith('sprite-common/') || relativePath.startsWith('inline-svg/')) {
+                return ''; // 제외할 폴더의 이미지는 빌드하지 않음
+              }
+              return `img/${relativePath}`;
+            },
+          },
+          exclude: [
+            path.resolve(__dirname, 'src/img/sprites-common'),
+            path.resolve(__dirname, 'src/img/inline-svg'),
+            path.resolve(__dirname, 'src/fonts'), // 폰트 폴더 제외
+          ],      
+        },
+        {
+          test: /\.svg$/i, // 일반 SVG 파일은 별도로 처리 (inline-svg 제외)
+          type: 'asset/resource',
+          generator: {
+            filename: (pathData) => {
+              const relativePath = path.relative(path.resolve(__dirname, 'src/img'), pathData.filename);
+              if (relativePath.startsWith('inline-svg/')) {
+                return ''; // inline-svg 폴더의 SVG는 빌드하지 않음
+              }
+              return `img/${relativePath}`;
+            },
+          },
+          exclude: [
+            path.resolve(__dirname, 'src/img/inline-svg'),
+          ],
+        },
+        {
+          test: /\.(woff|woff2|ttf|otf|eot)$/i,
+          type: 'asset/resource',
+          generator: {
+            filename: 'asset/fonts/[name][ext]', // 폰트 파일은 dist/asset/fonts로
+          },
+        },        
         {
           test: /\.js$/,
           exclude: /node_modules/,
@@ -230,7 +297,7 @@ module.exports = async () => {
             'css-loader',
             'sass-loader'
           ]
-        }
+        },
       ]
     },
     plugins: [
@@ -256,8 +323,26 @@ module.exports = async () => {
       new BrowserSyncPlugin({
         host: 'localhost',
         port: 3030,
-        files: ['./dist/**/*.html'],
-        server: { baseDir: ['dist'] } // server base directory
+        files: ['./dist/**/*.html'], // HTML만 감시
+        server: { baseDir: ['dist'] }
+      }),
+      new ImageMinimizerPlugin({
+        minimizer: {
+          implementation: ImageMinimizerPlugin.imageminGenerate,
+          options: {
+            plugins: [
+              ['gifsicle', {interlaced: true}],
+              ['mozjpeg', {quality:80}],
+              ['optipng', {optimizationLevel:5}],
+              ['svgo', {
+                plugins: [
+                  {name: 'removeViewBox', active: true},
+                  {name: 'removeDimensions', active: false}
+                ],
+              }],
+            ]
+          }
+        }
       }),
       new CopyWebpackPlugin({
         patterns : [
@@ -266,21 +351,39 @@ module.exports = async () => {
             to: path.resolve(__dirname, 'dist/asset/fonts'),
           },
           {
-            from: path.resolve(__dirname, 'src/img/common'),
-            to: path.resolve(__dirname, 'dist/asset/img/common'),
-          }, 
-          {
-            from: path.resolve(__dirname, 'src/img/svg'),
-            to: path.resolve(__dirname, 'dist/asset/img/svg'),
-          }, 
-          {
             from: path.resolve(__dirname, 'src/video'),
             to: path.resolve(__dirname, 'dist/asset/video'),
           },
         ],
       }),
-      new InlineSvgScssPlugin()
+      // inline SVG 
+      new InlineSvgScssPlugin(),
+      // PNG Sprite
+      new SpritesmithPlugin({
+        src: {
+          cwd: path.resolve(__dirname, 'src/img/sprites-common'),
+          glob:'*.png'
+        },
+        target: {
+          image: path.resolve(__dirname, 'src/img/sprite/sprite.png'), // png 합친 파일
+          css: [
+            [
+              path.resolve(__dirname, 'src/css/scss/sprites/_sprites.scss'),
+              {format: 'scss_template'}
+            ]
+          ]
+        },
+        customTemplates: {
+          scss_template: path.resolve(__dirname, 'src/css/scss/sprites/_sprite-template.handlebars')
+        },
+        apiOptions: {
+          cssImageRef: '~img/sprite/sprite.png' // 합쳐진 스프라이트 이미지를 불러올 경로
+        }
+      }),
     ],
+    resolve :{
+      modules: ['node_modules', 'src']
+    },
     devServer: {
       static: {
         directory: path.join(__dirname, 'dist'),
@@ -295,12 +398,8 @@ module.exports = async () => {
       historyApiFallback: {
         index: '/index.html',
       },
-      watchFiles: ['src/*', 'index.html', '!src/css/scss/inline-svg/_inline-svg-data.scss'],
-    },
-    watchOptions: {
-      ignored: /node_modules/,
-      aggregateTimeout: 300,
-      poll: 1000
+      // SCSS 감시는 webpack-dev-server만
+      watchFiles: ['src/**/*', 'index.html', '!src/css/**/*.scss', '!src/css/scss/inline-svg/_inline-svg-data.scss'],
     },
   }
 };

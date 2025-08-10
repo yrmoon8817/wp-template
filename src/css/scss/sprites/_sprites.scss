@@ -1,0 +1,77 @@
+$spritesheet-vars: (
+	'free-icon-star-1': (
+		offset-x: 0px,
+		offset-y: 0px,
+		width: 70px,
+		height: 70px,
+		total-width: 210px,
+		total-height: 140px,
+		imageSrc: '~img/sprite/sprite.png'
+	),
+	'free-icon-star-2': (
+		offset-x: -70px,
+		offset-y: 0px,
+		width: 70px,
+		height: 70px,
+		total-width: 210px,
+		total-height: 140px,
+		imageSrc: '~img/sprite/sprite.png'
+	),
+	'free-icon-star-3': (
+		offset-x: 0px,
+		offset-y: -70px,
+		width: 70px,
+		height: 70px,
+		total-width: 210px,
+		total-height: 140px,
+		imageSrc: '~img/sprite/sprite.png'
+	),
+	'free-icon-star-4': (
+		offset-x: -70px,
+		offset-y: -70px,
+		width: 70px,
+		height: 70px,
+		total-width: 210px,
+		total-height: 140px,
+		imageSrc: '~img/sprite/sprite.png'
+	),
+	'free-icon-star-5': (
+		offset-x: -140px,
+		offset-y: 0px,
+		width: 70px,
+		height: 70px,
+		total-width: 210px,
+		total-height: 140px,
+		imageSrc: '~img/sprite/sprite.png'
+	),
+);
+$spritesheet-origin: (
+  total-width: 210px,
+  total-height: 140px,
+  imageSrc: '~img/sprite/sprite.png'
+);
+
+@mixin sprite-size($image) {
+	background-size: map-get($image, 'total-width') map-get($image, 'total-height');
+}
+
+@mixin sprite-image($image) {
+	$image-path: map-get($image, 'imageSrc');
+	background-image: url($image-path);
+}
+
+@mixin set-spritesheet {
+  @include sprite-size($spritesheet-origin);
+  @include sprite-image($spritesheet-origin);
+}
+
+@mixin sp-spritesheet($image, $size: true) {
+  @include set-spritesheet;
+  $offset-x: map-get(map-get($spritesheet-vars, $image), 'offset-x');
+  $offset-y: map-get(map-get($spritesheet-vars, $image), 'offset-y');
+	background-position: $offset-x $offset-y;
+	@if $size {
+		width: map-get(map-get($spritesheet-vars, $image), 'width');
+		height: map-get(map-get($spritesheet-vars, $image), 'height');
+	}
+}

@@ -1,0 +1,240 @@
+
+
+#content {
+  padding: 20px;
+}
+i {
+  display: inline-block;
+}
+
+.sample-element {
+  position: relative;
+  max-width: 1024px;
+  margin: 0 auto;
+  margin-bottom:100px;
+
+  strong {
+    display: block;
+    font-size: 20px;
+    line-height: 35px;
+    margin-bottom: 15px;
+  }
+}
+.sample-box {
+  @include flexbox();
+  @include justify-content(space-between);
+  width: 30%;
+  padding:15px 0;
+  border:1px solid #ddd;
+
+  .icon-box {
+    padding:10px;
+  }
+
+  & + .sample-box {
+    margin-top:10px;
+  }
+}
+.box01 {
+  .ic {
+    &_apple_24px {
+      @include inline-svg-icon('ic_apple_24px', #f00,none, none);
+    }
+    &_bluetooth_24px {
+      @include inline-svg-icon('ic_bluetooth_24px', #f00, #f00, #f00);
+    }
+    &_bullet_bold_12px {
+      @include inline-svg-icon('ic_bullet_bold_12px', #f00, #f00, #f00);
+    }
+    &_cat_24px {
+      @include inline-svg-icon('ic_cat_24px', #f00, #f00, #f00);
+    }
+    &_insta_24px {
+      @include inline-svg-icon('ic_insta_24px', #f00, #f00, #f00);
+    }
+    &_send_24px {
+      @include inline-svg-icon('ic_send_24px', #f00, #f00, #f00);
+    }
+    &_wifi_24px {
+      @include inline-svg-icon('ic_wifi_24px', #f00, #f00, #f00);
+    }
+  }
+}
+.box02 {
+  .ic {
+    &_apple_24px {
+      @include inline-svg-icon('ic_apple_24px', #fa8908,none, none);
+    }
+    &_bluetooth_24px {
+      @include inline-svg-icon('ic_bluetooth_24px', #fa8908, #fa8908, #fa8908);
+    }
+    &_bullet_bold_12px {
+      @include inline-svg-icon('ic_bullet_bold_12px', #fa8908, #fa8908, #fa8908);
+    }
+    &_cat_24px {
+      @include inline-svg-icon('ic_cat_24px', #fa8908, #fa8908, #fa8908);
+    }
+    &_insta_24px {
+      @include inline-svg-icon('ic_insta_24px', #fa8908, #fa8908, #fa8908);
+    }
+    &_send_24px {
+      @include inline-svg-icon('ic_send_24px', #fa8908, #fa8908, #fa8908);
+    }
+    &_wifi_24px {
+      @include inline-svg-icon('ic_wifi_24px', #fa8908, #fa8908, #fa8908);
+    }
+  }
+}
+.box04 {
+  .ic {
+    &_apple_24px {
+      @include inline-svg-icon('ic_apple_24px', #058816,none, none);
+    }
+    &_bluetooth_24px {
+      @include inline-svg-icon('ic_bluetooth_24px', #058816, #058816, #058816);
+    }
+    &_bullet_bold_12px {
+      @include inline-svg-icon('ic_bullet_bold_12px', #058816, #058816, #058816);
+    }
+    &_cat_24px {
+      @include inline-svg-icon('ic_cat_24px', #058816, #058816, #058816);
+    }
+    &_insta_24px {
+      @include inline-svg-icon('ic_insta_24px', #058816, #058816, #058816);
+    }
+    &_send_24px {
+      @include inline-svg-icon('ic_send_24px', #058816, #058816, #058816);
+    }
+    &_wifi_24px {
+      @include inline-svg-icon('ic_wifi_24px', #058816, #058816, #058816);
+    }
+  }
+}
+.box05 {
+  .ic {
+    &_apple_24px {
+      @include inline-svg-icon('ic_apple_24px', #130fdf,none, none);
+    }
+    &_bluetooth_24px {
+      @include inline-svg-icon('ic_bluetooth_24px', #130fdf, #130fdf, #130fdf);
+    }
+    &_bullet_bold_12px {
+      @include inline-svg-icon('ic_bullet_bold_12px', #130fdf, #130fdf, #130fdf);
+    }
+    &_cat_24px {
+      @include inline-svg-icon('ic_cat_24px', #130fdf, #130fdf, #130fdf);
+    }
+    &_insta_24px {
+      @include inline-svg-icon('ic_insta_24px', #130fdf, #130fdf, #130fdf);
+    }
+    &_send_24px {
+      @include inline-svg-icon('ic_send_24px', #130fdf, #130fdf, #130fdf);
+    }
+    &_wifi_24px {
+      @include inline-svg-icon('ic_wifi_24px', #130fdf, #130fdf, #130fdf);
+    }
+  }
+}
+.box06 {
+  .ic {
+    &_apple_24px {
+      @include inline-svg-icon('ic_apple_24px', #9521c4,none, none);
+    }
+    &_bluetooth_24px {
+      @include inline-svg-icon('ic_bluetooth_24px', #9521c4, #9521c4, #9521c4);
+    }
+    &_bullet_bold_12px {
+      @include inline-svg-icon('ic_bullet_bold_12px', #9521c4, #9521c4, #9521c4);
+    }
+    &_cat_24px {
+      @include inline-svg-icon('ic_cat_24px', #9521c4, #9521c4, #9521c4);
+    }
+    &_insta_24px {
+      @include inline-svg-icon('ic_insta_24px', #9521c4, #9521c4, #9521c4);
+    }
+    &_send_24px {
+      @include inline-svg-icon('ic_send_24px', #9521c4, #9521c4, #9521c4);
+    }
+    &_wifi_24px {
+      @include inline-svg-icon('ic_wifi_24px', #9521c4, #9521c4, #9521c4);
+    }
+  }
+}
+
+.sp-sample-02 {
+  display:inline-block;
+  @include sp-spritesheet('free-icon-star-2');
+}
+.sp-sample-01 {
+  display:inline-block;
+  @include sp-spritesheet('free-icon-star-1');
+}
+.sp-sample-03 {
+  display:inline-block;
+  @include sp-spritesheet('free-icon-star-3');
+}
+.sp-sample-04 {
+  display:inline-block;
+  @include sp-spritesheet('free-icon-star-4');
+}
+.sp-sample-05 {
+  display:inline-block;
+  @include sp-spritesheet('free-icon-star-5');
+}
+.vw-sample-text {
+  padding: 10px;
+  background-color: lightcoral;
+  color: #fff;
+  @include vw-font-style-pc(50, bold, 50px);
+}
+
+.flexbox-sample {
+  @include flexbox;
+  @include flex-direction(column);
+  @include justify-content(center);
+  @include align-content(center);
+  height: 250px;
+  background-color: plum;
+}
+
+.flex-item-sample1 {
+  width: 100px;
+  height: 100px;
+  background-color: lightblue;
+  @include flex(1 1 auto);
+  @include order(2);
+}
+
+.flex-item-sample2 {
+  width: 200px;
+  height: 100px;
+  background-color: blue;
+  @include flex(0 0 auto);
+  @include order(1);
+}
+
+.ellipsis-multi-sample {
+  @include ellipsis(2);
+  @include font-style(15, false, 20px);
+}
+
+.ellipsis-sample {
+  max-width: 500px;
+  margin-top: 10px;
+  @include ellipsis(1);
+  @include font-style(12, bold, 1.5);
+}
+
+@include breakpoint(tablet) {
+  .vw-sample-text {
+    background-color: lightgreen;
+    @include vw-font-style-tb(50, 400, 1.5);
+  }
+}
+
+@include breakpoint(mobile) {
+  .vw-sample-text {
+    background-color: lightsalmon;
+    @include vw-font-style-mo(25, false, 30px);
+  }
+}

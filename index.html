@@ -32,6 +32,7 @@ section .index-cate-item{padding:4px 10px;border-bottom:1px solid #ddd;box-sizin
 section .index-title{padding:8px;font-size:22px;font-weight:700;color:#2d2d2d;border-bottom:2px solid #2d2d2d;}
 section .sub-title:not(:first-of-type){margin-top:10px;}
 .section-list {padding:20px;}
+.section-list:last-of-type {padding-bottom:100px !important;}
 .sub-title:not(.cate):not(:first-of-type){margin-top:15px;}
 .index-section-item{display:block;padding:7px 10px;border-bottom:1px solid #ddd;}
 .index-link-title {display:inline-block;margin-right:15px;}
@@ -152,8 +153,8 @@ section .sub-title:not(:first-of-type){margin-top:10px;}
 						<span class="label-date <%= list[g][w].splitStatus %>"><%= list[g][w].splitStatusDate %></span>
 						<%}%></li><%}%>
 						</ul>
-		<a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
-	</section>
+          </section>
+          <a href="#cate-top" class="go-to-top" style="position:fixed;bottom:80px;right:30px;border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:15px;background-color:#134672;color:#fff;width:45px;height:45px;line-height:45px;">Top</a>
 	<%}%>
 	<footer class="index-footer">
 		<p class="index-info"><strong>Hivelab</strong> / <%= project.projectOrg %> / <%= project.projectAuthor %></p>
