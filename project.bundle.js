@@ -7427,7 +7427,7 @@ i {
   -ms-flex-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
-  width: 30%;
+  width: 350px;
   padding: 15px 0;
   border: 1px solid #ddd;
 }
@@ -8571,7 +8571,7 @@ module.exports = __webpack_require__.p + "img/svg\\youtube2.svg";
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("a2ad91f18e70f8179f3f")
+/******/ 		__webpack_require__.h = () => ("6597c2b90bc020323071")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
